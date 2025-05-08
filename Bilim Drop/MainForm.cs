@@ -7,10 +7,18 @@ namespace Bilim_Drop
     public partial class MainForm : Form
     {
         IDisposable server = null;
+        Repository repo = new RepositoryImpl();
         public MainForm()
         {
             InitializeComponent();
             StartServer($"http://+:80");
+            GetData();
+        }
+
+        private async void GetData()
+        {
+            var l = await repo.getQuizzes();
+            MessageBox.Show(l.Length.ToString());
         }
 
         private void StartServer(string url)
