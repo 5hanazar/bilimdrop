@@ -18,7 +18,7 @@ namespace Bilim_Drop
         private async void GetData()
         {
             var l = await repo.getQuizzes();
-            MessageBox.Show(l.Length.ToString());
+            myDataGridView1.DataSource = l;
         }
 
         private void StartServer(string url)
