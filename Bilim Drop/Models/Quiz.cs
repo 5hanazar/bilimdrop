@@ -17,4 +17,19 @@
             this.createdDate = createdDate;
         }
     }
+    public class PostQuiz
+    {
+        public int id { get; }
+        public bool active { get; }
+        public string title { get; }
+        public string description { get; }
+
+        public PostQuiz(int id, bool active, string title, string description)
+        {
+            this.id = id;
+            this.active = active;
+            this.title = title;
+            this.description = description;
+        }
+    }
 }
