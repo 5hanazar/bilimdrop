@@ -2,15 +2,25 @@
 {
     public class Answer
     {
-        public int id { get; }
-        public int questionId { get; }
         public string title { get; }
         public bool isCorrect { get; }
 
-        public Answer(int id, int questionId, string title, bool isCorrect)
+        public Answer(string title, bool isCorrect)
         {
-            this.id = id;
-            this.questionId = questionId;
+            this.title = title;
+            this.isCorrect = isCorrect;
+        }
+    }
+
+    public class PostAnswer
+    {
+        public int line { get; }
+        public string title { get; }
+        public bool isCorrect { get; }
+
+        public PostAnswer(int line, string title, bool isCorrect)
+        {
+            this.line = line;
             this.title = title;
             this.isCorrect = isCorrect;
         }

@@ -26,7 +26,7 @@ namespace Bilim_Drop
                 {
                     while (rd.Read())
                     {
-                        list.Add(new Quiz(rd.GetInt32(0), rd.GetInt32(1) == 1, rd.GetString(2), rd.GetString(3), GmtToString(rd.GetInt32(4))));
+                        list.Add(new Quiz(rd.GetInt32(0), rd.GetInt32(1) == 1, rd.GetString(2), rd.GetString(3), gmtToString(rd.GetInt32(4))));
                     };
                 });
             });
@@ -44,12 +44,51 @@ namespace Bilim_Drop
                 {
                     while (rd.Read())
                     {
-                        result = new Quiz(rd.GetInt32(0), rd.GetInt32(1) == 1, rd.GetString(2), rd.GetString(3), GmtToString(rd.GetInt32(4)));
+                        var quizId = rd.GetInt32(0);
+                        result = new Quiz(quizId, rd.GetInt32(1) == 1, rd.GetString(2), rd.GetString(3), gmtToString(rd.GetInt32(4)), _getQuestions(quizId));
                     }
                 });
             });
             return Task.FromResult(result);
         }
+        private Question[] _getQuestions(int quizId)
+        {
+            var result = new List<Question>();
+            sql.UseCmd(cmd =>
+            {
+                cmd.CommandText = $"SELECT id, questionType, title FROM questions WHERE quizId = @quizId ORDER BY line";
+                cmd.Parameters.AddWithValue("@quizId", quizId);
+                cmd.Prepare();
+                sql.UseReader(cmd, rd =>
+                {
+                    while (rd.Read())
+                    {
+                        var questionId = rd.GetInt32(0);
+                        result.Add(new Question(questionId, rd.GetInt32(1), rd.GetString(2), _getAnswers(questionId)));
+                    }
+                });
+            });
+            return result.ToArray();
+        }
+        private Answer[] _getAnswers(int questionId)
+        {
+            var result = new List<Answer>();
+            sql.UseCmd(cmd =>
+            {
+                cmd.CommandText = $"SELECT title, isCorrect FROM answers WHERE questionId = @questionId ORDER BY line";
+                cmd.Parameters.AddWithValue("@questionId", questionId);
+                cmd.Prepare();
+                sql.UseReader(cmd, rd =>
+                {
+                    while (rd.Read())
+                    {
+                        result.Add(new Answer(rd.GetString(0), rd.GetInt32(1) == 1));
+                    }
+                });
+            });
+            return result.ToArray();
+        }
+
         public Task<int> insertOrUpdateQuiz(PostQuiz arg)
         {
             int id = arg.id;
@@ -72,15 +111,58 @@ namespace Bilim_Drop
                 cmd.Prepare();
 
                 if (id == 0) id = Convert.ToInt32(cmd.ExecuteScalar());
-                else cmd.ExecuteNonQuery();
+                else
+                {
+                    cmd.CommandText += $"; DELETE FROM questions WHERE quizId = {id}; DELETE FROM answers WHERE quizId = {id}";
+                    cmd.ExecuteNonQuery();
+                }
             });
+            for (int i = 0; i < arg.questions.Length; i++)
+            {
+                _insertQuestion(id, arg.questions[i]);
+            }
             return Task.FromResult(id);
         }
+
+        private void _insertQuestion(int quizId, PostQuestion value)
+        {
+            sql.UseCmd(cmd =>
+            {
+                cmd.CommandText = $"INSERT INTO questions(id, quizId, line, questionType, title) values(@id, @quizId, @line, @questionType, @title)";
+                cmd.Parameters.AddWithValue("@id", value.id);
+                cmd.Parameters.AddWithValue("@quizId", quizId);
+                cmd.Parameters.AddWithValue("@line", value.line);
+                cmd.Parameters.AddWithValue("@questionType", value.questionType);
+                cmd.Parameters.AddWithValue("@title", value.title);
+                cmd.Prepare();
+                cmd.ExecuteNonQuery();
+            });
+            for (int i = 0; i < value.answers.Length; i++)
+            {
+                _insertAnswer(quizId, value.id, value.answers[i]);
+            }
+        }
+
+        private void _insertAnswer(int quizId, int questionId, PostAnswer value)
+        {
+            sql.UseCmd(cmd =>
+            {
+                cmd.CommandText = $"INSERT INTO answers(quizId, questionId, line, title, isCorrect) values(@quizId, @questionId, @line, @title, @isCorrect)";
+                cmd.Parameters.AddWithValue("@quizId", quizId);
+                cmd.Parameters.AddWithValue("@questionId", questionId);
+                cmd.Parameters.AddWithValue("@line", value.line);
+                cmd.Parameters.AddWithValue("@title", value.title);
+                cmd.Parameters.AddWithValue("@isCorrect", value.isCorrect);
+                cmd.Prepare();
+                cmd.ExecuteNonQuery();
+            });
+        }
+
         public Task<int> deleteQuiz(Quiz arg)
         {
             sql.UseCmd(cmd =>
             {
-                cmd.CommandText = "DELETE FROM quizzes WHERE id = @id";
+                cmd.CommandText = "DELETE FROM quizzes WHERE id = @id; DELETE FROM questions WHERE quizId = @id; DELETE FROM answers WHERE quizId = @id";
                 cmd.Parameters.AddWithValue("@id", arg.id);
                 cmd.Prepare();
                 cmd.ExecuteNonQuery();
@@ -88,7 +170,7 @@ namespace Bilim_Drop
             return Task.FromResult(arg.id);
         }
 
-        private string GmtToString(int seconds)
+        private string gmtToString(int seconds)
         {
             var unixEpoch = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
             var dateTime = unixEpoch.AddSeconds(seconds);
