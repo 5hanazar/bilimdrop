@@ -76,6 +76,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Controllers\FilesController.cs" />
     <Compile Include="Controllers\IndexController.cs" />
     <Compile Include="MainForm.cs">
       <SubType>Form</SubType>
@@ -84,6 +85,7 @@
       <DependentUpon>MainForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Models\Answer.cs" />
+    <Compile Include="Models\FileDto.cs" />
     <Compile Include="Models\Question.cs" />
     <Compile Include="Models\Quiz.cs" />
     <Compile Include="MyDataGridView.cs">

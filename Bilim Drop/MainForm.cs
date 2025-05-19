@@ -1,6 +1,10 @@
 ﻿using Bilim_Drop.Models;
 using Microsoft.Owin.Hosting;
 using System;
+using System.Collections.Generic;
+using System.Drawing;
+using System.IO;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace Bilim_Drop
@@ -12,8 +16,10 @@ namespace Bilim_Drop
         public MainForm()
         {
             InitializeComponent();
-            StartServer($"https://+:450");
+            myDataGridView1.MultiSelect = false;
+            StartServer($"http://+:450");
             GetData();
+            GetFilesAsync();
         }
 
         private void StartServer(string url)
@@ -111,5 +117,32 @@ namespace Bilim_Drop
             }
             GetData();
         }
+
+        private async void GetFilesAsync()
+        {
+            var list = await _getFiles();
+            var imgs = new ImageList();
+            imgs.ColorDepth = ColorDepth.Depth16Bit;
+            imgs.ImageSize = new Size(32, 32);
+            listView1.Items.Clear();
+            for (int i = 0; i < list.Count; i++)
+            {
+                var item = new ListViewItem(list[i].name);
+                item.ImageIndex = i;
+                listView1.Items.Add(item);
+                imgs.Images.Add(list[i].image);
+            }
+            listView1.LargeImageList = imgs;
+        }
+
+        private Task<List<FileDto>> _getFiles() => Task.Run(() => {
+            var files = Directory.GetFiles($"C:/Users/User/Documents/des");
+            var list = new List<FileDto>();
+            foreach (var f in files)
+            {
+                list.Add(new FileDto(Icon.ExtractAssociatedIcon(f).ToBitmap(), Path.GetFileName(f), "df"));
+            }
+            return Task.FromResult(list);
+        });
     }
 }
