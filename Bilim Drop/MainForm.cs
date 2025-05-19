@@ -16,6 +16,7 @@ namespace Bilim_Drop
         public MainForm()
         {
             InitializeComponent();
+            Icon = Icon.ExtractAssociatedIcon("icon.ico");
             myDataGridView1.MultiSelect = false;
             StartServer($"http://+:450");
             GetData();
@@ -73,6 +74,7 @@ namespace Bilim_Drop
         {
             var f = new QuizForm(repo, 0);
             f.Text = $"Täze test";
+            f.Icon = Icon;
             f.StartPosition = FormStartPosition.CenterScreen;
             f.FormClosed += F_FormClosed;
             f.ShowDialog();
@@ -88,6 +90,7 @@ namespace Bilim_Drop
             var arg = (Quiz)myDataGridView1.SelectedRows[0].DataBoundItem;
             var f = new QuizForm(repo, arg.id);
             f.Text = $"Testi üýtget";
+            f.Icon = Icon;
             f.StartPosition = FormStartPosition.CenterScreen;
             f.FormClosed += F_FormClosed;
             f.ShowDialog();

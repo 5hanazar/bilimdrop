@@ -92,6 +92,7 @@ namespace Bilim_Drop
         {
             var f = new QuestionForm(repo, new Question((new Random()).Next(100000, 1000000), 0, "", new Answer[] { }));
             f.Text = $"Täze sorag";
+            f.Icon = Icon;
             f.StartPosition = FormStartPosition.CenterScreen;
             f.FormClosed += New_QuestionForm_FormClosed;
             f.ShowDialog();
@@ -106,6 +107,7 @@ namespace Bilim_Drop
             var arg = (Question)myDataGridView1.SelectedRows[0].DataBoundItem;
             var f = new QuestionForm(repo, arg);
             f.Text = $"Soragy üýtget";
+            f.Icon = Icon;
             f.StartPosition = FormStartPosition.CenterScreen;
             f.FormClosed += Edit_QuestionForm_FormClosed;
             f.ShowDialog();
