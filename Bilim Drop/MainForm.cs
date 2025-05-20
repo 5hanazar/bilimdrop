@@ -139,12 +139,15 @@ namespace Bilim_Drop
         }
 
         private Task<List<FileDto>> _getFiles() => Task.Run(() => {
-            var files = Directory.GetFiles($"C:/Users/User/Documents/des");
             var list = new List<FileDto>();
-            foreach (var f in files)
+            try
             {
-                list.Add(new FileDto(Icon.ExtractAssociatedIcon(f).ToBitmap(), Path.GetFileName(f), "df"));
-            }
+                var files = Directory.GetFiles($"files");
+                foreach (var f in files)
+                {
+                    list.Add(new FileDto(Icon.ExtractAssociatedIcon(f).ToBitmap(), Path.GetFileName(f), ""));
+                }
+            } catch (Exception e) {}
             return Task.FromResult(list);
         });
     }

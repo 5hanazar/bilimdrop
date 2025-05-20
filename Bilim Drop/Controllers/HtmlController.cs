@@ -5,7 +5,7 @@ using System.Web.Http;
 
 namespace Bilim_Drop.Controllers
 {
-    public class FilesController : ApiController
+    public class HtmlController : ApiController
     {
         public HttpResponseMessage Get()
         {
@@ -19,7 +19,7 @@ namespace Bilim_Drop.Controllers
         }
         private byte[] LoadFilesBytes(string file)
         {
-            string filePath = $"files/{file}";
+            string filePath = $"html/{file}";
             if (File.Exists(filePath)) return File.ReadAllBytes(filePath);
             return null;
         }

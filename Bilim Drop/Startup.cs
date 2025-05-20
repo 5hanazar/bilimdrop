@@ -10,7 +10,7 @@ namespace Bilim_Drop
             var config = new HttpConfiguration();
             config.Routes.MapHttpRoute(
                 name: "DefaultApi",
-                routeTemplate: "bilimdrop/{controller}/{id}",
+                routeTemplate: "{controller}/{id}",
                 defaults: new { controller = "index", id = RouteParameter.Optional }
             );
             app.UseWebApi(config);
