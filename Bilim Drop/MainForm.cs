@@ -150,5 +150,42 @@ namespace Bilim_Drop
             } catch (Exception e) {}
             return Task.FromResult(list);
         });
+
+        private void buttonFirewall_Click(object sender, EventArgs e)
+        {
+            if (FirewallRuleExists("Allow Bilim Drop"))
+            {
+                MessageBox.Show("Firewall rule already exists.", "Firewall");
+            } else
+            {
+                //executeCmd($"netsh advfirewall firewall add rule name=\"Allow Bilim Drop\" dir=in action=allow program=\"{Application.ExecutablePath}\" protocol=TCP localport=450");
+                executeCmd($"netsh advfirewall firewall add rule name=\"Allow Bilim Drop\" dir=in action=allow protocol=TCP localport=450");
+                MessageBox.Show("New firewall rule was added.", "Firewall");
+            }
+        }
+
+        private bool FirewallRuleExists(string ruleName)
+        {
+            return !string.IsNullOrWhiteSpace(executeCmd($"netsh advfirewall firewall show rule name=all | find \"Rule Name:\" | find \"{ruleName}\""));
+        }
+        private string executeCmd(string cmd)
+        {
+            var process = new System.Diagnostics.Process
+            {
+                StartInfo = new System.Diagnostics.ProcessStartInfo
+                {
+                    FileName = "cmd.exe",
+                    Arguments = $"/c {cmd}",
+                    RedirectStandardOutput = true,
+                    RedirectStandardError = true,
+                    UseShellExecute = false,
+                    CreateNoWindow = true
+                }
+            };
+            process.Start();
+            string output = process.StandardOutput.ReadToEnd();
+            process.WaitForExit();
+            return output;
+        }
     }
 }
