@@ -187,5 +187,57 @@ namespace Bilim_Drop
             process.WaitForExit();
             return output;
         }
+
+        private void addFileToolStripButton_Click(object sender, EventArgs e)
+        {
+
+            using (OpenFileDialog openFileDialog = new OpenFileDialog())
+            {
+                openFileDialog.Title = "Select a file";
+                openFileDialog.Filter = "All Files|*.*";
+
+                if (openFileDialog.ShowDialog() == DialogResult.OK)
+                {
+                    string sourceFilePath = openFileDialog.FileName;
+                    string fileName = Path.GetFileName(sourceFilePath);
+                    string destinationFolder = "files";
+                    Directory.CreateDirectory(destinationFolder);
+                    string destinationPath = Path.Combine(destinationFolder, fileName.Replace(' ', '_'));
+                    try
+                    {
+                        File.Copy(sourceFilePath, destinationPath, overwrite: true);
+                        MessageBox.Show($"File copied to:\n{destinationPath}", "Success");
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show($"Error copying file:\n{ex.Message}", "Error");
+                    }
+                }
+            }
+            GetFilesAsync();
+        }
+
+        private void refreshFilesToolStripButton_Click(object sender, EventArgs e)
+        {
+            GetFilesAsync();
+        }
+
+        private void deleteFileToolStripButton_Click(object sender, EventArgs e)
+        {
+            if (listView1.SelectedItems.Count == 0) return;
+            if (MessageBox.Show("Ýok etmek isleýärsiňizmi?", "Ýok et", MessageBoxButtons.YesNo) == DialogResult.No) return;
+            var fileName = listView1.SelectedItems[0].Text;
+            var filePath = Path.Combine("files", fileName);
+            try
+            {
+                File.Delete(filePath);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error deleting file:\n" + ex.Message);
+                return;
+            }
+            GetFilesAsync();
+        }
     }
 }
