@@ -1,169 +1,58 @@
 <!DOCTYPE html>
 <html lang="en">
-	<head>
-		<meta charset="UTF-8" />
-		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-		<title>Bilim Drop</title>
-		<style>
-			@font-face {
-				font-family: roboto;
-				src: url("html/roboto.ttf");
-			}
 
-			@font-face {
-				font-family: robotocondensed;
-				src: url("html/robotocondensed.ttf");
-			}
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1 user-scalable=no" />
+	<title>Bilim Drop</title>
+	<link href="html/bootstrap.min.css" rel="stylesheet" />
+</head>
 
-			body {
-				margin: 0;
-				font-family: roboto;
-				background-color: #c8e6c9;
-			}
-
-			header {
-				background-color: #388e3c;
-				color: #fff;
-			}
-			header .header {
-				display: flex;
-				align-items: center;
-				padding: 0 1rem;
-			}
-
-			.center {
-				max-width: 1280px;
-				margin: 0 auto;
-			}
-
-			.logo {
-				font-size: 2rem;
-				font-family: robotocondensed;
-				display: flex;
-				align-items: center;
-				gap: 1rem;
-				margin: 0.5rem auto 0.5rem 0;
-				font-weight: bold;
-			}
-			.logo > img {
-				display: block;
-			}
-
-			.info {
-				text-align: end;
-			}
-			.info > .subject {
-				font-size: 1.4rem;
-				font-weight: bold;
-				margin-bottom: 0.2rem;
-			}
-
-			.files {
-				display: flex;
-				flex-direction: column;
-				padding: 0 1rem;
-				gap: 1rem;
-			}
-			.files > h2 {
-				margin: 2rem 0 0 0;
-				color: #1b5e20;
-			}
-			.files > a {
-				background-color: #fff;
-				padding: 1rem;
-				border-radius: 10px;
-				box-shadow: 0 0 4px #1b5e2080;
-				transition: background-color 100ms;
-				text-decoration: none;
-			}
-			.files > a:hover {
-				background-color: #ffffff80;
-			}
-
-			.upload {
-				display: flex;
-				flex-direction: column;
-				align-items: center;
-			}
-			.upload > button {
-				background-color: #1b5e20;
-				border: none;
-				color: #fff;
-				padding: 10px;
-				font-size: larger;
-				margin: 20px;
-			}
-			.upload > button:active {
-				background-color: #388e3c;
-			}
-			.upload > button:focus {
-				outline: none;
-			}
-		</style>
-	</head>
-
-	<body>
-		<header>
-			<div class="center header">
-				<div class="logo">
-					<img src="html/icon.png" alt="" />
-					Bilim Drop
-				</div>
-				<div class="info">
-					<div class="subject">Class name</div>
-					<div class="teacher">Teacher name</div>
-				</div>
-			</div>
+<body>
+	<div class="container">
+		<header class="d-flex justify-content-center py-3 mb-5 border-bottom">
+			<ul class="nav nav-pills">
+				<li class="nav-item"><a href="#" class="nav-link active" aria-current="page">Materials</a></li>
+				<li class="nav-item"><a href="#" class="nav-link">Tests</a></li>
+			</ul>
 		</header>
-		<div class="center files">
-			<h2>Materiallar</h2>
+		<p class="display-6 mb-4">Materials</p>
+		<div class="list-group mb-5">
 			<!--files-->
 		</div>
-
-		<div class="upload">
-			<input type="file" id="real-file" hidden="hidden" />
-			<button type="button" id="custom-button">CHOOSE A FILE</button>
-			<span id="custom-text">No file chosen, yet.</span>
-			<button type="button" id="submit">SUBMIT</button>
-			<span id="result-txt"></span>
+		<p class="display-6 mb-4">Upload</p>
+		<div class="d-flex gap-2">
+			<input type="file" class="form-control" id="customFile">
+			<button class="btn btn-primary" type="button" id="buttonUpload">Submit</button>
 		</div>
-
-		<script>
-			const realFileBtn = document.getElementById("real-file");
-			const customBtn = document.getElementById("custom-button");
-			const customTxt = document.getElementById("custom-text");
-			const submitBtn = document.getElementById("submit");
-			const resultTxt = document.getElementById("result-txt");
-			async function submitFile(file) {
-				if (file == null) return;
-				customBtn.disabled = true;
-				submitBtn.disabled = true;
-				resultTxt.innerText = "Loading..";
-				const response = await fetch("files", {
-					method: "POST",
-					headers: {
-						"X-Filename": file.name,
-					},
-					body: file,
-				});
-				if (response.ok) resultTxt.innerText = file.name + " was uploaded !";
-				else resultTxt.innerText = "Error: " + response.status;
-				customBtn.disabled = false;
-				submitBtn.disabled = false;
+	</div>
+	<script src="html/bootstrap.bundle.min.js"></script>
+	<script>
+		document.getElementById('buttonUpload').addEventListener('click', function () {
+			const fileInput = document.getElementById('customFile');
+			const file = fileInput.files[0];
+			if (!file) {
+				alert("Please select a file first.");
+				return;
 			}
-			customBtn.addEventListener("click", function () {
-				realFileBtn.click();
-			});
-			realFileBtn.addEventListener("change", function () {
-				if (realFileBtn.value)
-					customTxt.innerHTML = realFileBtn.value.match(
-						/[\/\\]([\w\d\s\.\-\(\)]+)$/
-					)[1];
-				else customTxt.innerHTML = "No file chosen, yet.";
-			});
-			submitBtn.addEventListener("click", function () {
-				submitFile(realFileBtn.files[0]);
-			});
-		</script>
-	</body>
+			fetch('files', {
+				method: 'POST',
+				headers: { "X-Filename": file.name },
+				body: file
+			})
+				.then(response => {
+					if (response.ok) {
+						alert('File uploaded successfully!');
+						fileInput.value = '';
+					}
+					else alert('File upload failed.');
+				})
+				.catch(error => {
+					console.error('Error uploading file:', error);
+					alert('An error occurred while uploading.');
+				});
+		});
+	</script>
+</body>
+
 </html>

@@ -243,6 +243,7 @@ namespace Bilim_Drop
 
         private void buttonReceived_Click(object sender, EventArgs e)
         {
+            Directory.CreateDirectory("received");
             System.Diagnostics.Process.Start("received");
         }
 

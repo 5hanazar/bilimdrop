@@ -16,7 +16,6 @@ namespace Bilim_Drop.Controllers
             if (fileData == null) return new HttpResponseMessage(HttpStatusCode.NotFound);
             HttpResponseMessage response = new HttpResponseMessage(HttpStatusCode.OK);
             response.Content = new ByteArrayContent(fileData);
-            response.Content.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue("text/plain");
             return response;
         }
         public async Task<IHttpActionResult> Post()

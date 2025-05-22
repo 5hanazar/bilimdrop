@@ -17,7 +17,7 @@ namespace Bilim_Drop.Controllers
             var aLinks = "";
             _getFiles().ForEach(e =>
             {
-                aLinks += $"<a href=\"files/{e.name}\">{e.name}</a>";
+                aLinks += $"<a href=\"files/{e.name}\" class=\"list-group-item list-group-item-action\">{e.name}</a>";
             });
             html = html.Replace("<!--files-->", aLinks);
 
