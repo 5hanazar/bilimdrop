@@ -1,6 +1,8 @@
 ﻿using System.IO;
+using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Threading.Tasks;
 using System.Web.Http;
 
 namespace Bilim_Drop.Controllers
@@ -16,6 +18,18 @@ namespace Bilim_Drop.Controllers
             response.Content = new ByteArrayContent(fileData);
             response.Content.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue("text/plain");
             return response;
+        }
+        public async Task<IHttpActionResult> Post()
+        {
+            var fileNameHeader = Request.Headers.GetValues("X-Filename").FirstOrDefault();
+            string destinationFolder = "received";
+            Directory.CreateDirectory(destinationFolder);
+            var filePath = Path.Combine(destinationFolder, fileNameHeader);
+            using (var fileStream = File.Create(filePath))
+            {
+                await Request.Content.CopyToAsync(fileStream);
+            }
+            return Ok();
         }
         private byte[] LoadFilesBytes(string file)
         {

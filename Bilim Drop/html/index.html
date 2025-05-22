@@ -18,11 +18,11 @@
 			body {
 				margin: 0;
 				font-family: roboto;
-				background-color: #C8E6C9;
+				background-color: #c8e6c9;
 			}
 
 			header {
-				background-color: #388E3C;
+				background-color: #388e3c;
 				color: #fff;
 			}
 			header .header {
@@ -55,7 +55,7 @@
 			.info > .subject {
 				font-size: 1.4rem;
 				font-weight: bold;
-				margin-bottom: .2rem;
+				margin-bottom: 0.2rem;
 			}
 
 			.files {
@@ -66,18 +66,38 @@
 			}
 			.files > h2 {
 				margin: 2rem 0 0 0;
-				color: #1B5E20;
+				color: #1b5e20;
 			}
 			.files > a {
 				background-color: #fff;
 				padding: 1rem;
 				border-radius: 10px;
-				box-shadow: 0 0 4px #1B5E2080;
+				box-shadow: 0 0 4px #1b5e2080;
 				transition: background-color 100ms;
 				text-decoration: none;
 			}
 			.files > a:hover {
 				background-color: #ffffff80;
+			}
+
+			.upload {
+				display: flex;
+				flex-direction: column;
+				align-items: center;
+			}
+			.upload > button {
+				background-color: #1b5e20;
+				border: none;
+				color: #fff;
+				padding: 10px;
+				font-size: larger;
+				margin: 20px;
+			}
+			.upload > button:active {
+				background-color: #388e3c;
+			}
+			.upload > button:focus {
+				outline: none;
 			}
 		</style>
 	</head>
@@ -86,7 +106,7 @@
 		<header>
 			<div class="center header">
 				<div class="logo">
-					<img src="html/icon.png" alt="">
+					<img src="html/icon.png" alt="" />
 					Bilim Drop
 				</div>
 				<div class="info">
@@ -99,5 +119,51 @@
 			<h2>Materiallar</h2>
 			<!--files-->
 		</div>
+
+		<div class="upload">
+			<input type="file" id="real-file" hidden="hidden" />
+			<button type="button" id="custom-button">CHOOSE A FILE</button>
+			<span id="custom-text">No file chosen, yet.</span>
+			<button type="button" id="submit">SUBMIT</button>
+			<span id="result-txt"></span>
+		</div>
+
+		<script>
+			const realFileBtn = document.getElementById("real-file");
+			const customBtn = document.getElementById("custom-button");
+			const customTxt = document.getElementById("custom-text");
+			const submitBtn = document.getElementById("submit");
+			const resultTxt = document.getElementById("result-txt");
+			async function submitFile(file) {
+				if (file == null) return;
+				customBtn.disabled = true;
+				submitBtn.disabled = true;
+				resultTxt.innerText = "Loading..";
+				const response = await fetch("files", {
+					method: "POST",
+					headers: {
+						"X-Filename": file.name,
+					},
+					body: file,
+				});
+				if (response.ok) resultTxt.innerText = file.name + " was uploaded !";
+				else resultTxt.innerText = "Error: " + response.status;
+				customBtn.disabled = false;
+				submitBtn.disabled = false;
+			}
+			customBtn.addEventListener("click", function () {
+				realFileBtn.click();
+			});
+			realFileBtn.addEventListener("change", function () {
+				if (realFileBtn.value)
+					customTxt.innerHTML = realFileBtn.value.match(
+						/[\/\\]([\w\d\s\.\-\(\)]+)$/
+					)[1];
+				else customTxt.innerHTML = "No file chosen, yet.";
+			});
+			submitBtn.addEventListener("click", function () {
+				submitFile(realFileBtn.files[0]);
+			});
+		</script>
 	</body>
 </html>
