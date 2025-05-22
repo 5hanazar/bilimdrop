@@ -32,11 +32,13 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.buttonReceived = new System.Windows.Forms.Button();
             this.buttonFirewall = new System.Windows.Forms.Button();
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.toolStrip2 = new System.Windows.Forms.ToolStrip();
             this.refreshFilesToolStripButton = new System.Windows.Forms.ToolStripButton();
             this.addFileToolStripButton = new System.Windows.Forms.ToolStripButton();
+            this.deleteFileToolStripButton = new System.Windows.Forms.ToolStripButton();
             this.listView1 = new System.Windows.Forms.ListView();
             this.tabPage3 = new System.Windows.Forms.TabPage();
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
@@ -50,7 +52,7 @@
             this.addToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.editToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.deleteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.deleteFileToolStripButton = new System.Windows.Forms.ToolStripButton();
+            this.buttonAdapters = new System.Windows.Forms.Button();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.tabPage2.SuspendLayout();
@@ -78,6 +80,8 @@
             // 
             // tabPage1
             // 
+            this.tabPage1.Controls.Add(this.buttonAdapters);
+            this.tabPage1.Controls.Add(this.buttonReceived);
             this.tabPage1.Controls.Add(this.buttonFirewall);
             this.tabPage1.Location = new System.Drawing.Point(4, 34);
             this.tabPage1.Margin = new System.Windows.Forms.Padding(2);
@@ -87,6 +91,16 @@
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "Baş sahypa";
             this.tabPage1.UseVisualStyleBackColor = true;
+            // 
+            // buttonReceived
+            // 
+            this.buttonReceived.Location = new System.Drawing.Point(17, 65);
+            this.buttonReceived.Name = "buttonReceived";
+            this.buttonReceived.Size = new System.Drawing.Size(100, 40);
+            this.buttonReceived.TabIndex = 1;
+            this.buttonReceived.Text = "Received files";
+            this.buttonReceived.UseVisualStyleBackColor = true;
+            this.buttonReceived.Click += new System.EventHandler(this.buttonReceived_Click);
             // 
             // buttonFirewall
             // 
@@ -142,6 +156,16 @@
             this.addFileToolStripButton.Size = new System.Drawing.Size(23, 22);
             this.addFileToolStripButton.Text = "toolStripButton1";
             this.addFileToolStripButton.Click += new System.EventHandler(this.addFileToolStripButton_Click);
+            // 
+            // deleteFileToolStripButton
+            // 
+            this.deleteFileToolStripButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.deleteFileToolStripButton.Image = ((System.Drawing.Image)(resources.GetObject("deleteFileToolStripButton.Image")));
+            this.deleteFileToolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.deleteFileToolStripButton.Name = "deleteFileToolStripButton";
+            this.deleteFileToolStripButton.Size = new System.Drawing.Size(23, 22);
+            this.deleteFileToolStripButton.Text = "toolStripButton1";
+            this.deleteFileToolStripButton.Click += new System.EventHandler(this.deleteFileToolStripButton_Click);
             // 
             // listView1
             // 
@@ -265,15 +289,15 @@
             this.deleteToolStripMenuItem.Text = "Testi ýok et";
             this.deleteToolStripMenuItem.Click += new System.EventHandler(this.deleteToolStripMenuItem_Click);
             // 
-            // deleteFileToolStripButton
+            // buttonAdapters
             // 
-            this.deleteFileToolStripButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.deleteFileToolStripButton.Image = ((System.Drawing.Image)(resources.GetObject("deleteFileToolStripButton.Image")));
-            this.deleteFileToolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.deleteFileToolStripButton.Name = "deleteFileToolStripButton";
-            this.deleteFileToolStripButton.Size = new System.Drawing.Size(23, 22);
-            this.deleteFileToolStripButton.Text = "toolStripButton1";
-            this.deleteFileToolStripButton.Click += new System.EventHandler(this.deleteFileToolStripButton_Click);
+            this.buttonAdapters.Location = new System.Drawing.Point(17, 111);
+            this.buttonAdapters.Name = "buttonAdapters";
+            this.buttonAdapters.Size = new System.Drawing.Size(100, 40);
+            this.buttonAdapters.TabIndex = 2;
+            this.buttonAdapters.Text = "Adapters";
+            this.buttonAdapters.UseVisualStyleBackColor = true;
+            this.buttonAdapters.Click += new System.EventHandler(this.buttonAdapters_Click);
             // 
             // MainForm
             // 
@@ -323,6 +347,8 @@
         private System.Windows.Forms.ToolStripButton addFileToolStripButton;
         private System.Windows.Forms.ToolStripButton refreshFilesToolStripButton;
         private System.Windows.Forms.ToolStripButton deleteFileToolStripButton;
+        private System.Windows.Forms.Button buttonReceived;
+        private System.Windows.Forms.Button buttonAdapters;
     }
 }
 

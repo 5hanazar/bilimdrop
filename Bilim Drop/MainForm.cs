@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
+using System.Net.NetworkInformation;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -238,6 +239,31 @@ namespace Bilim_Drop
                 return;
             }
             GetFilesAsync();
+        }
+
+        private void buttonReceived_Click(object sender, EventArgs e)
+        {
+            System.Diagnostics.Process.Start("received");
+        }
+
+        private void buttonAdapters_Click(object sender, EventArgs e)
+        {
+            string s = "";
+            foreach (NetworkInterface nic in NetworkInterface.GetAllNetworkInterfaces())
+            {
+                if (nic.NetworkInterfaceType == NetworkInterfaceType.Loopback || nic.NetworkInterfaceType == NetworkInterfaceType.Tunnel || nic.OperationalStatus == OperationalStatus.Down) continue;
+                IPInterfaceProperties ipProperties = nic.GetIPProperties();
+                UnicastIPAddressInformationCollection ipAddresses = ipProperties.UnicastAddresses;
+
+                foreach (UnicastIPAddressInformation ipAddress in ipAddresses)
+                {
+                    if (ipAddress.Address.AddressFamily == System.Net.Sockets.AddressFamily.InterNetwork)
+                    {
+                        s += ipAddress.Address.ToString() + " - " + nic.Name + "\n";
+                    }
+                }
+            }
+            MessageBox.Show(s, "Adapters");
         }
     }
 }
