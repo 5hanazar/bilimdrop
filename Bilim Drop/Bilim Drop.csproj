@@ -84,6 +84,7 @@
     <Compile Include="Controllers\FilesController.cs" />
     <Compile Include="Controllers\HtmlController.cs" />
     <Compile Include="Controllers\IndexController.cs" />
+    <Compile Include="Controllers\QuizzesController.cs" />
     <Compile Include="MainForm.cs">
       <SubType>Form</SubType>
     </Compile>
