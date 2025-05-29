@@ -11,6 +11,8 @@ namespace Bilim_Drop
         Task<Quiz> getQuiz(int id);
         Task<int> insertOrUpdateQuiz(PostQuiz arg);
         Task<int> deleteQuiz(Quiz arg);
+        Task<Submission> getSubmission(int id);
+        Task<int> insertOrUpdateSubmission(Submission arg);
     }
     class RepositoryImpl : Repository
     {
@@ -179,6 +181,57 @@ namespace Bilim_Drop
         private float parse(string arg)
         {
             return float.TryParse(arg, out var v) ? (float)Math.Round(v, 2) : 0f;
+        }
+
+        public Task<Submission> getSubmission(int id)
+        {
+            Submission result = null;
+            sql.UseCmd(cmd =>
+            {
+                cmd.CommandText = $"SELECT id, isSubmitted, username, quizId, quizJ, answersJ, createdGmt FROM submissions WHERE id = @id";
+                cmd.Parameters.AddWithValue("@id", id);
+                cmd.Prepare();
+                sql.UseReader(cmd, rd =>
+                {
+                    while (rd.Read())
+                    {
+                        var submissionId = rd.GetInt32(0);
+                        result = new Submission(submissionId, rd.GetInt32(1) == 1, rd.GetString(2), rd.GetInt32(3), rd.GetString(4), rd.GetString(5), gmtToString(rd.GetInt32(6)));
+                    }
+                });
+            });
+            return Task.FromResult(result);
+        }
+        public Task<int> insertOrUpdateSubmission(Submission arg)
+        {
+            int id = arg.id;
+            sql.UseCmd(cmd =>
+            {
+                int secondsSinceEpoch = (int)(DateTime.UtcNow - new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc)).TotalSeconds;
+                if (id == 0)
+                {
+                    cmd.CommandText = "INSERT INTO submissions(isSubmitted, username, quizId, quizJ, answersJ, createdGmt) VALUES(@isSubmitted, @username, @quizId, @quizJ, @answersJ, @createdGmt); SELECT id FROM submissions ORDER BY id DESC LIMIT 1";
+                    cmd.Parameters.AddWithValue("@createdGmt", secondsSinceEpoch);
+                }
+                else
+                {
+                    cmd.CommandText = "UPDATE submissions SET isSubmitted = @isSubmitted, username = @username, quizId = @quizId, quizJ = @quizJ, answersJ = @answersJ WHERE id = @id";
+                    cmd.Parameters.AddWithValue("@id", id).Value = id;
+                };
+                cmd.Parameters.AddWithValue("@isSubmitted", arg.isSubmitted ? 1 : 0);
+                cmd.Parameters.AddWithValue("@username", arg.username);
+                cmd.Parameters.AddWithValue("@quizId", arg.quizId);
+                cmd.Parameters.AddWithValue("@quizJ", arg.quizJ);
+                cmd.Parameters.AddWithValue("@answersJ", arg.answersJ);
+                cmd.Prepare();
+
+                if (id == 0) id = Convert.ToInt32(cmd.ExecuteScalar());
+                else
+                {
+                    cmd.ExecuteNonQuery();
+                }
+            });
+            return Task.FromResult(id);
         }
     }
 }
