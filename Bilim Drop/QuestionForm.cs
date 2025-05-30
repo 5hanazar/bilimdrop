@@ -40,7 +40,7 @@ namespace Bilim_Drop
                 var c1 = myDataGridView1.Rows[i].Cells["colTitle"];
                 if (c1.Value == null || string.IsNullOrWhiteSpace(c1.Value.ToString())) continue;
                 var c2 = myDataGridView1.Rows[i].Cells["colCorrect"];
-                var item = new Answer(c1.Value.ToString(), c2.Value == null ? false : bool.Parse(c2.Value.ToString()));
+                var item = new Answer(i + 1, c1.Value.ToString(), c2.Value == null ? false : bool.Parse(c2.Value.ToString()));
                 list.Add(item);
             }
             argResult = new Question(int.Parse(textBox1.Text), 0, textBox2.Text, list.ToArray());

@@ -95,6 +95,7 @@
     <Compile Include="Models\FileDto.cs" />
     <Compile Include="Models\Question.cs" />
     <Compile Include="Models\Quiz.cs" />
+    <Compile Include="Models\QuizView.cs" />
     <Compile Include="Models\Submission.cs" />
     <Compile Include="MyDataGridView.cs">
       <SubType>Component</SubType>

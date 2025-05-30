@@ -77,14 +77,14 @@ namespace Bilim_Drop
             var result = new List<Answer>();
             sql.UseCmd(cmd =>
             {
-                cmd.CommandText = $"SELECT title, isCorrect FROM answers WHERE questionId = @questionId ORDER BY line";
+                cmd.CommandText = $"SELECT line, title, isCorrect FROM answers WHERE questionId = @questionId ORDER BY line";
                 cmd.Parameters.AddWithValue("@questionId", questionId);
                 cmd.Prepare();
                 sql.UseReader(cmd, rd =>
                 {
                     while (rd.Read())
                     {
-                        result.Add(new Answer(rd.GetString(0), rd.GetInt32(1) == 1));
+                        result.Add(new Answer(rd.GetInt32(0), rd.GetString(1), rd.GetInt32(2) == 1));
                     }
                 });
             });

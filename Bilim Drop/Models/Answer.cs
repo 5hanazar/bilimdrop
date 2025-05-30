@@ -2,11 +2,13 @@
 {
     public class Answer
     {
+        public int line { get; }
         public string title { get; }
         public bool isCorrect { get; }
 
-        public Answer(string title, bool isCorrect)
+        public Answer(int line, string title, bool isCorrect)
         {
+            this.line = line;
             this.title = title;
             this.isCorrect = isCorrect;
         }

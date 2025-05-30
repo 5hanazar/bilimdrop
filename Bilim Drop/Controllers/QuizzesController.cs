@@ -1,5 +1,7 @@
 ﻿using Bilim_Drop.Models;
+using Newtonsoft.Json;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
@@ -22,14 +24,29 @@ namespace Bilim_Drop.Controllers
             {
                 int sub_id = 0;
                 var cookie = Request.Headers.GetCookies("sub_id").FirstOrDefault();
-                if (cookie == null) sub_id = await repo.insertOrUpdateSubmission(new Submission(0, false, "steve", int.Parse(_id), "", "", ""));
+                if (cookie == null)
+                {
+                    var quiz = await repo.getQuiz(int.Parse(_id));
+                    var questionList = new List<QuestionView>();
+                    Array.ForEach(quiz.questions, (question) =>
+                    {
+                        var answerList = new List<AnswerView>();
+                        Array.ForEach(question.answers, (answer) => {
+                            answerList.Add(new AnswerView(answer.line, answer.title));
+                        });
+                        questionList.Add(new QuestionView(question.id, question.questionType, question.title, answerList.ToArray()));
+                    });
+                    var quizView = new QuizView(quiz.id, quiz.title, quiz.description, quiz.createdDate, questionList.ToArray());
+                    sub_id = await repo.insertOrUpdateSubmission(new Submission(0, false, "steve", int.Parse(_id), JsonConvert.SerializeObject(quizView), "", ""));
+                }
                 else sub_id = int.Parse(cookie["sub_id"].Value);
-                var sb = await repo.getSubmission(sub_id);
-
+                var submission = await repo.getSubmission(sub_id);    
+                
                 var r = new HttpResponseMessage();
-                r.Content = new StringContent(sb.id + " " + sb.createdDate);
+                r.Content = new StringContent(generateHtml(JsonConvert.DeserializeObject<QuizView>(submission.quizJ)));
                 var cc = new CookieHeaderValue("sub_id", sub_id.ToString());
                 r.Headers.AddCookies(new CookieHeaderValue[] { cc });
+                r.Content.Headers.ContentType = new MediaTypeHeaderValue("text/html");
                 return r;
             }
 
@@ -50,6 +67,18 @@ namespace Bilim_Drop.Controllers
             response.Content = new StringContent(html);
             response.Content.Headers.ContentType = new MediaTypeHeaderValue("text/html");
             return response;
+        }
+
+        private string generateHtml(QuizView quiz)
+        {
+            var html = "";
+            Array.ForEach(quiz.questions, (question) => {
+                html += $"<p>{question.title}</p>";
+                Array.ForEach(question.answers, (answer) => {
+                    html += $"<input type=\"checkbox\" name=\"q{question.id}_a{answer.line}\"><label for=\"q{question.id}_a{answer.line}\">{answer.title}</label>";
+                });
+            });
+            return html;
         }
     }
 }
