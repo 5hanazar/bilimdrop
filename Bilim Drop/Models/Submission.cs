@@ -21,4 +21,23 @@
             this.createdDate = createdDate;
         }
     }
+    public class PostSubmission
+    {
+        public int id { get; }
+        public bool isSubmitted { get; }
+        public string username { get; }
+        public int quizId { get; }
+        public string quizJ { get; }
+        public string answersJ { get; }
+
+        public PostSubmission(int id, bool isSubmitted, string username, int quizId, string quizJ, string answersJ)
+        {
+            this.id = id;
+            this.isSubmitted = isSubmitted;
+            this.username = username;
+            this.quizId = quizId;
+            this.quizJ = quizJ;
+            this.answersJ = answersJ;
+        }
+    }
 }

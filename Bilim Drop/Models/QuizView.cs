@@ -45,4 +45,16 @@
             this.title = title;
         }
     }
+    
+    public class Submitted
+    {
+        public int submissionId { get; }
+        public string[] answers { get; }
+
+        public Submitted(int submissionId, string[] answers)
+        {
+            this.submissionId = submissionId;
+            this.answers = answers;
+        }
+    }
 }

@@ -12,7 +12,7 @@ namespace Bilim_Drop
         Task<int> insertOrUpdateQuiz(PostQuiz arg);
         Task<int> deleteQuiz(Quiz arg);
         Task<Submission> getSubmission(int id);
-        Task<int> insertOrUpdateSubmission(Submission arg);
+        Task<int> insertOrUpdateSubmission(PostSubmission arg);
     }
     class RepositoryImpl : Repository
     {
@@ -202,7 +202,7 @@ namespace Bilim_Drop
             });
             return Task.FromResult(result);
         }
-        public Task<int> insertOrUpdateSubmission(Submission arg)
+        public Task<int> insertOrUpdateSubmission(PostSubmission arg)
         {
             int id = arg.id;
             sql.UseCmd(cmd =>

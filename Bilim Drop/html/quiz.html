@@ -1,10 +1,45 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"/><title>Bilim Drop</title><link rel="icon" href="/html/icon.png"/><meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no"><meta content="default-src 'self'; script-src 'self'; style-src 'self'"><script defer="defer" src="../html/main.js"></script><link href="../html/main.css" rel="stylesheet"></head><body><div class="container d-flex flex-column"><header class="d-flex flex-column flex-sm-row gap-3 py-3 mb-5 align-items-center border-bottom"><a href="#" class="d-flex align-items-center me-sm-auto text-dark text-decoration-none"><img src="/html/icon.png" alt="" width="40" height="40" class="me-2"> <span class="fs-4">Bilim Drop</span></a></header><div class="flex-fill w-100 mb-5 mx-auto" style="max-width: 600px" id="quiz"><div class="quiz-header"><h2>Interactive Quiz</h2><div class="progress"><div class="progress-bar" role="progressbar" style="width: 0%;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div></div></div><div id="question-container"><p class="question" id="question">What is the capital of France?</p><div class="options" id="options"><div class="option"><input type="checkbox" id="answer0" autocomplete="off"/> <label for="answer0">London</label></div><div class="option"><input type="checkbox" id="answer1" autocomplete="off"/> <label for="answer1">Berlin</label></div><div class="option"><input type="checkbox" id="answer2" autocomplete="off"/> <label for="answer2">Paris</label></div><div class="option"><input type="checkbox" id="answer3" autocomplete="off"/> <label for="answer3">Madrid</label></div></div></div><div class="quiz-footer"><div class="timer" id="timer">Time: 10 min.</div><button class="btn btn-primary" id="next-btn">Next</button></div></div><footer class="py-3 border-top"><span class="text-body-secondary">© 2025 Bilim Drop</span></footer></div><script>const checkboxes = document.querySelectorAll(".option > input");
-		checkboxes.forEach((checkbox) => {
-			checkbox.addEventListener("change", function () {
-				if (this.checked) {
-					checkboxes.forEach((cb) => {
-						if (cb !== this) cb.checked = false;
-					});
-				}
-			});
-		});</script></body></html>
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no">
+	<title>Bilim Drop</title>
+	<link rel="icon" href="/html/icon.png">
+  <script type="module" crossorigin src="/html/main.js"></script>
+  <link rel="stylesheet" href="/html/main.css">
+</head>
+
+<body>
+	<div class="container d-flex flex-column">
+		<header class="d-flex flex-column flex-sm-row gap-3 py-3 mb-5 align-items-center border-bottom">
+			<a href="#" class="d-flex align-items-center me-sm-auto text-dark text-decoration-none">
+				<img src="/html/icon.png" alt="" width="40" height="40" class="me-2">
+				<span class="fs-4">Bilim Drop</span>
+			</a>
+		</header>
+
+		<div class="flex-fill w-100 mb-5 mx-auto" style="max-width:600px">
+			<div class="quiz_header">
+				<h2><!--title--></h2>
+				<div class="progress">
+					<div class="progress_bar" role="progressbar" style="width:0%" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+				</div>
+			</div>
+			<!--questions-->
+			<div class="quiz_footer">
+				<div><small class="fw-bold">Started:</small> <!--submissionCreatedDate--></div>
+				<button type="button" class="btn btn-primary" id="btn_submit">Submit</button>
+			</div>
+		</div>
+
+		<footer class="py-3 border-top">
+			<span class="text-body-secondary">© 2025 Bilim Drop</span>
+		</footer>
+	</div>
+
+	<script>const chboxes=document.querySelectorAll(".option > input");chboxes.forEach((e=>{e.addEventListener("change",(function(){const e=this.parentElement.parentElement.querySelectorAll("input");this.checked&&e.forEach((e=>{e!==this&&(e.checked=!1)}))}))}));const onReady=async()=>{const e=document.querySelectorAll(".question_container"),t=[];e.forEach((e=>{const n=e.querySelectorAll("input[type='checkbox']:checked");1==n.length&&t.push(n[0].id)}));(await fetch("/quizzes",{headers:{"Content-Type":"application/json"},method:"POST",body:JSON.stringify({submissionId:/*submissionId*/,answers:t})})).ok?(document.cookie="sub_id=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;",window.location.replace("/quizzes")):alert("Quiz upload failed.")};document.getElementById("btn_submit").addEventListener("click",onReady)</script>
+	
+</body>
+
+</html>

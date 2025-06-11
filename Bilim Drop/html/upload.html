@@ -1,65 +1,47 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 
 <head>
-	<meta charset="utf-8" />
-	<title>Bilim Drop</title>
-	<link rel="icon" href="/html/icon.png" />
+	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no">
-	<meta content="default-src 'self'; script-src 'self'; style-src 'self'">
-	<script defer="defer" src="../html/main.js"></script>
-	<link href="../html/main.css" rel="stylesheet">
+	<title>Bilim Drop</title>
+	<link rel="icon" href="/html/icon.png">
+  <script type="module" crossorigin src="/html/main.js"></script>
+  <link rel="stylesheet" href="/html/main.css">
 </head>
 
 <body>
 	<div class="container d-flex flex-column">
-		<header class="d-flex flex-column flex-sm-row gap-3 py-3 mb-5 align-items-center border-bottom"><a href="#"
-				class="d-flex align-items-center me-sm-auto text-dark text-decoration-none"><img src="/html/icon.png"
-					alt="" width="40" height="40" class="me-2"> <span class="fs-4">Bilim Drop</span></a>
+		<header class="d-flex flex-column flex-sm-row gap-3 py-3 mb-5 align-items-center border-bottom">
+			<a href="#" class="d-flex align-items-center me-sm-auto text-dark text-decoration-none">
+				<img src="/html/icon.png" alt="" width="40" height="40" class="me-2">
+				<span class="fs-4">Bilim Drop</span>
+			</a>
 			<ul class="nav nav-pills">
 				<li class="nav-item"><a href="/" class="nav-link">Materials</a></li>
 				<li class="nav-item"><a href="/quizzes" class="nav-link">Quizzes</a></li>
 				<li class="nav-item"><a href="#" class="nav-link active" aria-current="page">Upload</a></li>
 			</ul>
 		</header>
+
 		<p class="display-6 mb-4">Upload</p>
 		<div class="flex-fill mb-5">
-			<div class="d-flex gap-2"><input type="file" class="form-control" id="customFile"> <button
-					class="btn btn-primary flex-shrink-0" type="button" id="buttonUpload"><span
-						class="spinner-border spinner-border-sm" aria-hidden="true" style="display: none"></span> <span
-						role="status">Submit</span></button></div>
+			<div class="d-flex gap-2">
+				<input type="file" class="form-control" id="customFile">
+				<button class="btn btn-primary flex-shrink-0" type="button" id="buttonUpload">
+					<span class="spinner-border spinner-border-sm" aria-hidden="true" style="display:none"></span>
+					<span role="status">Submit</span>
+				</button>
+			</div>
 		</div>
-		<footer class="py-3 border-top"><span class="text-body-secondary">© 2025 Bilim Drop</span></footer>
+
+		<footer class="py-3 border-top">
+			<span class="text-body-secondary">© 2025 Bilim Drop</span>
+		</footer>
 	</div>
-	<script>const buttonUpload = document.getElementById("buttonUpload");
-		buttonUpload.addEventListener("click", async () => {
-			const fileInput = document.getElementById("customFile");
-			const file = fileInput.files[0];
-			if (!file) {
-				alert("Please select a file first.");
-				return;
-			}
-			buttonUpload.disabled = true;
-			fileInput.disabled = true;
-			buttonUpload.getElementsByClassName("spinner-border")[0].style.display = "";
-			try {
-				const response = await fetch("/files", {
-					method: "POST",
-					headers: { "X-Filename": file.name },
-					body: file,
-				});
-				if (response.ok) {
-					alert("File uploaded successfully!");
-				} else alert("File upload failed.");
-			} catch (_) {
-				alert("File upload failed.");
-			}
-			fileInput.value = "";
-			buttonUpload.getElementsByClassName("spinner-border")[0].style.display =
-				"none";
-			fileInput.disabled = false;
-			buttonUpload.disabled = false;
-		});</script>
+
+	<script>const buttonUpload=document.getElementById("buttonUpload");buttonUpload.addEventListener("click",(async()=>{const e=document.getElementById("customFile"),l=e.files[0];if(l){buttonUpload.disabled=!0,e.disabled=!0,buttonUpload.getElementsByClassName("spinner-border")[0].style.display="";try{(await fetch("/files",{method:"POST",headers:{"X-Filename":l.name},body:l})).ok?alert("File uploaded successfully!"):alert("File upload failed.")}catch(e){alert("File upload failed.")}e.value="",buttonUpload.getElementsByClassName("spinner-border")[0].style.display="none",e.disabled=!1,buttonUpload.disabled=!1}else alert("Please select a file first.")}))</script>
+	
 </body>
 
 </html>

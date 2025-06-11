@@ -20,10 +20,10 @@ namespace Bilim_Drop.Controllers
             {
                 files.ForEach(e =>
                 {
-                    aLinks += $"<a href=\"files/{e.name}\" class=\"list-group-item list-group-item-action\">{e.name}</a>";
+                    aLinks += $"<a href=\"/files/{e.name}\" class=\"list-group-item list-group-item-action\">{e.name}</a>";
                 });
             }
-            else aLinks = "<div class=\"p-4 text-center bg-body-tertiary rounded-3\">No materials available.</div>";
+            else aLinks = "<div class=\"p-5 text-center bg-body-tertiary rounded-3\">No materials available.</div>";
             html = html.Replace("<!--files-->", aLinks);
 
             var response = new HttpResponseMessage();
